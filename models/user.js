@@ -1,26 +1,27 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const userSchema = new mongoose.Schema({
-  name: {
-    required: true,
-    minlength: 2,
-    maxlength: 30,
-    type: String,
+const userSchema = new mongoose.Schema(
+  {
+    name: {
+      required: true,
+      minlength: 2,
+      maxlength: 30,
+      type: String,
+    },
+    about: {
+      required: true,
+      minlength: 2,
+      maxlength: 30,
+      type: String,
+    },
+    avatar: {
+      type: String,
+      required: true,
+    },
   },
-  about: {
-    required: true,
-    minlength: 2,
-    maxlength: 30,
-    type: String,
+  {
+    versionKey: false,
   },
-  avatar: {
-    type: String,
-    required: true,
-  },
-},
-{
-  versionKey: false,
-},
 );
 
-module.exports = mongoose.model('user', userSchema);
+module.exports = mongoose.model("user", userSchema);
