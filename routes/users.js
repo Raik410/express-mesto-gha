@@ -1,20 +1,38 @@
+const { celebrate, Joi } = require('celebrate');
 const userRouter = require("express").Router();
 const {
   getUsers,
   getUsersById,
-  createUser,
+  // createUser,
   updateProfile,
   updateAvatar,
+  getUserProfile,
 } = require("../controllers/user");
+const validateURL = require('../utils/validateURL/validateURL');
 
 userRouter.get("/", getUsers);
 
-userRouter.get("/:userId", getUsersById);
+userRouter.get('/me', getUserProfile);
 
-userRouter.post("/", createUser);
+userRouter.get("/:userId", celebrate({
+  params: Joi.object().keys({
+    userId: Joi.string().alphanum().length(24),
+  }),
+}), getUsersById);
 
-userRouter.patch("/me", updateProfile);
+// userRouter.post("/", createUser);
 
-userRouter.patch("/me/avatar", updateAvatar);
+userRouter.patch("/me", celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().required().min(2).max(20),
+    about: Joi.string().required().min(2).max(20),
+  }),
+}), updateProfile);
+
+userRouter.patch("/me/avatar", celebrate({
+  body: Joi.object().keys({
+    avatar: Joi.string().required().custom(validateURL),
+  }),
+}), updateAvatar);
 
 module.exports = userRouter;
