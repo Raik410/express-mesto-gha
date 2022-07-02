@@ -63,7 +63,7 @@ module.exports.likeCard = (req, res, next) => {
   )
     .then((card) => {
       if (!card) {
-        throw new NotFound("Карточка не найдена!");
+        next(new NotFound("Карточка не найдена!"));
       }
       res.send({ data: card });
     })
@@ -82,7 +82,7 @@ module.exports.dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(cardId, { $pull: { likes: userId } }, { new: true })
     .then((card) => {
       if (!card) {
-        throw new NotFound("Карточка не найдена!");
+        next(new NotFound("Карточка не найдена!"));
       }
       res.send({ data: card });
     })

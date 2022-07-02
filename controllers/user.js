@@ -2,11 +2,12 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
-const AuthorizationError = require('../utils/errors/authorization-error');
+// const AuthorizationError = require('../utils/errors/authorization-error');
 const BadRequest = require('../utils/errors/bad-request');
 // const ErrorCreated = require('../utils/errors/error-created');
 const NotFound = require('../utils/errors/not-found');
 // const RightsError = require('../utils/errors/rights-error');
+const BusyOwner = require('../utils/errors/busy-owner');
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
@@ -85,7 +86,7 @@ module.exports.createUser = (req, res, next) => {
         next(new BadRequest('Переданы некорректные данные'));
       }
       if (err.code === 11000) {
-        next(new AuthorizationError('Пользователь занят!'));
+        next(new BusyOwner('Пользователь занят!'));
       }
       next(err);
     });
@@ -101,12 +102,7 @@ module.exports.updateProfile = (req, res, next) => {
       }
       res.send({ data: user });
     })
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        next(new BadRequest('Переданы некорректные данные'));
-      }
-      next(err);
-    });
+    .catch(next);
 };
 
 module.exports.updateAvatar = (req, res, next) => {
