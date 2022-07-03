@@ -2,8 +2,6 @@
   "extends": "airbnb-base",
 
   "rules": {
-    "eqeqeq": "off", "curly": "off",
-    "quotes": "off",
     "no-underscore-dangle": ["error", { "allow": ["_id"] }]
     }
 

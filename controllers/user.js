@@ -33,9 +33,10 @@ module.exports.getUsersById = (req, res, next) => {
   User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
-        next(new NotFound("Пользователь не найден!"));
+        next(new NotFound('Пользователь не найден!'));
+      } else {
+        res.send({ data: user });
       }
-      res.send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -49,9 +50,10 @@ module.exports.getUserProfile = (req, res, next) => {
   User.findById(req.user._id)
     .then((user) => {
       if (!req.user._id) {
-        next(new NotFound("Пользователь не найден"));
+        next(new NotFound('Пользователь не найден'));
+      } else {
+        res.send({ data: user });
       }
-      res.send({ data: user });
     })
     .catch(next);
 };
@@ -98,9 +100,10 @@ module.exports.updateProfile = (req, res, next) => {
   User.findByIdAndUpdate(userId, { name, about }, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
-        next(new NotFound("Пользователь не найден!"));
+        next(new NotFound('Пользователь не найден!'));
+      } else {
+        res.send({ data: user });
       }
-      res.send({ data: user });
     })
     .catch(next);
 };
@@ -111,14 +114,16 @@ module.exports.updateAvatar = (req, res, next) => {
   User.findByIdAndUpdate(userId, { avatar }, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
-        next(new NotFound("Пользователь не найден!"));
+        next(new NotFound('Пользователь не найден!'));
+      } else {
+        res.send({ data: user });
       }
-      res.send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequest('Переданы некорректные данные'));
+      } else {
+        next(err);
       }
-      next(err);
     });
 };

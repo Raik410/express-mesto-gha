@@ -1,6 +1,8 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const { isEmail } = require('validator');
 const AuthorizationError = require('../utils/errors/authorization-error');
+const validateURL = require('../utils/validateURL/validateURL');
 
 const userSchema = new mongoose.Schema(
   {
@@ -9,6 +11,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       unique: true,
       index: true,
+      validate: [isEmail, { message: 'Некорректный email' }],
     },
     password: {
       required: true,
@@ -19,17 +22,18 @@ const userSchema = new mongoose.Schema(
       minlength: 2,
       maxlength: 30,
       type: String,
-      default: "Жак-Ив Кусто",
+      default: 'Жак-Ив Кусто',
     },
     about: {
       minlength: 2,
       maxlength: 30,
       type: String,
-      default: "Исследователь",
+      default: 'Исследователь',
     },
     avatar: {
       type: String,
-      default: "https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png",
+      default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
+      validate: validateURL,
     },
   },
   {
@@ -55,4 +59,4 @@ userSchema.statics.findUserByCredentials = function (email, password) {
     });
 };
 
-module.exports = mongoose.model("user", userSchema);
+module.exports = mongoose.model('user', userSchema);

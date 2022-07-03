@@ -7,6 +7,7 @@ const cardRouter = require('./routes/cards');
 const { login, createUser } = require('./controllers/user');
 const auth = require('./middlewares/auth');
 const validateURL = require('./utils/validateURL/validateURL');
+const NotFound = require('./utils/errors/not-found');
 
 const { PORT = 3000 } = process.env;
 
@@ -35,7 +36,7 @@ app.post('/signup', celebrate({
 app.use('/users', auth, userRouter);
 app.use('/cards', auth, cardRouter);
 
-app.use((req, res) => res.status(404).send({ message: "Страница не найдена" }));
+app.use(auth, (req, res, next) => next(new NotFound('Страница не найдена')));
 
 app.use(errors());
 

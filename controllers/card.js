@@ -1,4 +1,4 @@
-const Card = require("../models/card");
+const Card = require('../models/card');
 
 // const AuthorizationError = require('../utils/errors/authorization-error');
 const BadRequest = require('../utils/errors/bad-request');
@@ -19,8 +19,8 @@ module.exports.createCard = (req, res, next) => {
   Card.create({ name, link, owner })
     .then((card) => res.send({ data: card }))
     .catch((err) => {
-      if (err.name === "ValidationError") {
-        next(new BadRequest("Переданы некорректные данные"));
+      if (err.name === 'ValidationError') {
+        next(new BadRequest('Переданы некорректные данные'));
       } else {
         next(err);
       }
@@ -33,19 +33,21 @@ module.exports.deleteCard = (req, res, next) => {
   Card.findById(cardId)
     .then((card) => {
       if (!card) {
-        throw new NotFound("Карточка не найдена!");
+        throw new NotFound('Карточка не найдена!');
+      } else {
+        const owner = card.owner.toString();
+        if (owner !== req.user._id) {
+          throw new RightsError('Это не ваша карточка');
+        } else {
+          Card.findByIdAndRemove(req.params.cardId)
+            .then(() => {
+              res.send({ message: 'Карточка удалена' });
+            });
+        }
       }
-      const owner = card.owner.toString();
-      if (owner !== req.user._id) {
-        throw new RightsError("Это не ваша карточка");
-      }
-      Card.findByIdAndRemove(req.params.cardId)
-        .then(() => {
-          res.send({ message: 'Карточка удалена' });
-        });
     })
     .catch((err) => {
-      if (err.name === "CastError") {
+      if (err.name === 'CastError') {
         next(new BadRequest('Переданы некорректные данные'));
       } else {
         next(err);
@@ -63,12 +65,13 @@ module.exports.likeCard = (req, res, next) => {
   )
     .then((card) => {
       if (!card) {
-        next(new NotFound("Карточка не найдена!"));
+        next(new NotFound('Карточка не найдена!'));
+      } else {
+        res.send({ data: card });
       }
-      res.send({ data: card });
     })
     .catch((err) => {
-      if (err.name === "CastError") {
+      if (err.name === 'CastError') {
         next(new BadRequest('Переданы некорректные данные'));
       } else {
         next(err);
@@ -82,12 +85,13 @@ module.exports.dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(cardId, { $pull: { likes: userId } }, { new: true })
     .then((card) => {
       if (!card) {
-        next(new NotFound("Карточка не найдена!"));
+        next(new NotFound('Карточка не найдена!'));
+      } else {
+        res.send({ data: card });
       }
-      res.send({ data: card });
     })
     .catch((err) => {
-      if (err.name === "CastError") {
+      if (err.name === 'CastError') {
         next(new BadRequest('Переданы некорректные данные'));
       } else {
         next(err);
