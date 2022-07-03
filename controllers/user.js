@@ -46,8 +46,7 @@ module.exports.getUsersById = (req, res, next) => {
       }
     });
 };
-// А как ещё можно выходить из функции, можете подсказать пожалуйста?
-// if/else это понятно и с помощью return, но как их записывать?
+// Понял, спасибо!
 
 module.exports.getUserProfile = (req, res, next) => {
   User.findById(req.user._id)
