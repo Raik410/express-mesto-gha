@@ -41,10 +41,13 @@ module.exports.getUsersById = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequest('Переданы некорректные данные'));
+      } else {
+        next(err);
       }
-      next(err);
     });
 };
+// А как ещё можно выходить из функции, можете подсказать пожалуйста?
+// if/else это понятно и с помощью return, но как их записывать?
 
 module.exports.getUserProfile = (req, res, next) => {
   User.findById(req.user._id)
@@ -86,11 +89,14 @@ module.exports.createUser = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequest('Переданы некорректные данные'));
+      } else {
+        next(err);
       }
       if (err.code === 11000) {
         next(new BusyOwner('Пользователь занят!'));
+      } else {
+        next(err);
       }
-      next(err);
     });
 };
 
