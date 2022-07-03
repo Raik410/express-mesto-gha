@@ -88,13 +88,11 @@ module.exports.createUser = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequest('Переданы некорректные данные'));
-        return;
-      }
-      if (err.code === 11000) {
+      } else if (err.code === 11000) {
         next(new BusyOwner('Пользователь занят!'));
-        return;
+      } else {
+        next(err);
       }
-      next(err);
     });
 };
 
