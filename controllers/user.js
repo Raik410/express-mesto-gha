@@ -11,7 +11,7 @@ const BusyOwner = require('../utils/errors/busy-owner');
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.send(user))
     .catch(next);
 };
 
@@ -35,7 +35,7 @@ module.exports.getUsersById = (req, res, next) => {
       if (!user) {
         next(new NotFound('Пользователь не найден!'));
       } else {
-        res.send({ data: user });
+        res.send(user);
       }
     })
     .catch((err) => {
@@ -54,7 +54,7 @@ module.exports.getUserProfile = (req, res, next) => {
       if (!req.user._id) {
         next(new NotFound('Пользователь не найден'));
       } else {
-        res.send({ data: user });
+        res.send(user);
       }
     })
     .catch(next);
@@ -83,7 +83,7 @@ module.exports.createUser = (req, res, next) => {
         about: user.about,
         avatar: user.avatar,
       };
-      res.send({ data: userData });
+      res.send(userData);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -104,7 +104,7 @@ module.exports.updateProfile = (req, res, next) => {
       if (!user) {
         next(new NotFound('Пользователь не найден!'));
       } else {
-        res.send({ data: user });
+        res.send(user);
       }
     })
     .catch(next);
@@ -118,7 +118,7 @@ module.exports.updateAvatar = (req, res, next) => {
       if (!user) {
         next(new NotFound('Пользователь не найден!'));
       } else {
-        res.send({ data: user });
+        res.send(user);
       }
     })
     .catch((err) => {
