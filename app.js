@@ -6,7 +6,7 @@ const userRouter = require('./routes/users');
 const cardRouter = require('./routes/cards');
 const { login, createUser } = require('./controllers/user');
 const auth = require('./middlewares/auth');
-const cors = require('./middlewares/cors');
+// const cors = require('./middlewares/cors');
 const validateURL = require('./utils/validateURL/validateURL');
 const NotFound = require('./utils/errors/not-found');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
@@ -44,7 +44,29 @@ app.use(errorLogger);
 
 app.use(auth, (req, res, next) => next(new NotFound('Страница не найдена')));
 
-app.use(cors);
+const allowedCors = [
+  'mesto.raiki.nomoredomains.xyz',
+  'localhost:3000',
+  'http://localhost:3000',
+  'http://mesto.raiki.nomoredomains.xyz',
+];
+
+app.use((req, res, next) => {
+  const { origin } = req.headers;
+  const { method } = req;
+  const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
+  const requestHeaders = req.headers['access-control-request-headers'];
+  if (allowedCors.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+    res.header('Access-Control-Allow-Credentials', 'true');
+  }
+  if (method === 'OPTIONS') {
+    res.header('Access-Control-Allow-Methods', DEFAULT_ALLOWED_METHODS);
+    res.header('Access-Control-Allow-Headers', requestHeaders);
+    return res.status(200).send();
+  }
+  return next();
+});
 
 app.use(errors());
 
