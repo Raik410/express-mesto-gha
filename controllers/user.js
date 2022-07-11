@@ -11,7 +11,7 @@ const BusyOwner = require('../utils/errors/busy-owner');
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.send(user))
     .catch(next);
 };
 
