@@ -1,6 +1,8 @@
 const allowedCors = [
   'mesto.raiki.nomoredomains.xyz',
   'localhost:3000',
+  'http://localhost:3000',
+  'http://mesto.raiki.nomoredomains.xyz',
 ];
 
 module.exports = (req, res, next) => {
