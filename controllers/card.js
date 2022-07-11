@@ -8,7 +8,7 @@ const RightsError = require('../utils/errors/rights-error');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
-    .then((card) => res.send({ data: card }))
+    .then((card) => res.send({ card }))
     .catch(next);
 };
 
