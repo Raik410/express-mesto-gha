@@ -11,7 +11,7 @@ const BusyOwner = require('../utils/errors/busy-owner');
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
-    .then((user) => res.send(user))
+    .then((user) => res.send({ data: user }))
     .catch(next);
 };
 
@@ -54,7 +54,7 @@ module.exports.getUserProfile = (req, res, next) => {
       if (!req.user._id) {
         next(new NotFound('Пользователь не найден'));
       } else {
-        res.send(user);
+        res.send({ data: user });
       }
     })
     .catch(next);
